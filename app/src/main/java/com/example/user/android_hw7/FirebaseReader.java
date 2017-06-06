@@ -1,7 +1,10 @@
 package com.example.user.android_hw7;
 
+import android.app.Notification;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -18,9 +21,13 @@ import java.util.List;
 
 public class FirebaseReader extends Thread {
     private DataSnapshot dataSnapshot;
+    //private HotelAdapter adapter = null;
+    private Handler handler =null;
 
-    public FirebaseReader(DataSnapshot dataSnapshot){
+
+    public FirebaseReader(DataSnapshot dataSnapshot,Handler handler){
         this.dataSnapshot=  dataSnapshot;
+        this.handler = handler;
     }
     public  void run(){
         List<Hotel> Hotel_list = new ArrayList<>();
@@ -38,6 +45,10 @@ public class FirebaseReader extends Thread {
             hotel.setImgUrl(Picture);
             Hotel_list.add(hotel);
             Log.v("123", "Name:" + Name);
+            Message msg = new Message();
+            msg.what = MainActivity.LIST_Hotel;
+            msg.obj = Hotel_list;
+            handler.sendMessage(msg);
         }
     }
 
@@ -55,4 +66,7 @@ public class FirebaseReader extends Thread {
         }
         return null;
     }
+
+
+
 }
